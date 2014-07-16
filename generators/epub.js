@@ -14,6 +14,6 @@ module.exports = {
       cover: 'http://placekitten.com/600/800',
       pages: getPages(data)
     });
-    epub.create('/tmp/').then(fn);
+    epub.create('./tmp/').then(fn);
   }
 };
