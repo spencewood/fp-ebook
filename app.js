@@ -13,6 +13,9 @@ var app = express();
 //generators
 var epub = require('./generators/epub');
 
+//s3
+var s3 = require('./s3');
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -39,8 +42,11 @@ app.io.route('ready', function(req) {
   pubnub.subscribe({
     channel: 'fp-demo',
     callback: function(message){
-      epub.generate(message, function(res){
-        console.log('done generating epub:', res);
+      epub.generate(message, function(err, res){
+        s3.uploadFile(res.path, function(err, res){
+          res.name = 'epub';
+          req.io.emit('format', res);
+        });
       });
       req.io.emit('message', message);
     }
