@@ -11,7 +11,7 @@ module.exports = {
   generate: function(data, fn){
     var epub = new Peepub({
       title: data.title,
-      cover: 'http://placekitten.com/600/800',
+      cover: data.cover,
       pages: getPages(data)
     });
     epub.create('./tmp/').then(function(res){

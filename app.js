@@ -12,6 +12,7 @@ var app = express();
 
 //generators
 var epub = require('./generators/epub');
+var pdf = require('./generators/pdf');
 
 //s3
 var s3 = require('./s3');
@@ -44,6 +45,9 @@ app.io.route('ready', function(req) {
     callback: function(message){
       epub.generate(message, function(err, res){
         s3.uploadFile(res.path, function(err, res){
+          if(err != null){
+            throw err;
+          }
           res.name = 'epub';
           req.io.emit('format', res);
         });
