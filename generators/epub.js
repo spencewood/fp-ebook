@@ -8,13 +8,13 @@ var getPages = function(data){
 };
 
 module.exports = {
-  generate: function(data, fn){
+  generate: function(data, name, fn){
     var epub = new Peepub({
       title: data.title,
       cover: data.cover,
       pages: getPages(data)
     });
-    epub.create('./tmp/').then(function(res){
+    epub.create('./tmp/' + name + '.epub').then(function(res){
       fn(null, {
         path: res
       });

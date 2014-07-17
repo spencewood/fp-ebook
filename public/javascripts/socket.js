@@ -12,6 +12,6 @@ $(function(){
   var template = Handlebars.compile($('#format-template').html());
 
   io.on('format', function(format) {
-    $("#book-list").html(template(format));
+    $("#book-list").append(template(format));
   });
 });

@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var uuid = require('node-uuid');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -43,12 +44,23 @@ app.io.route('ready', function(req) {
   pubnub.subscribe({
     channel: 'fp-demo',
     callback: function(message){
-      epub.generate(message, function(err, res){
+      var name = uuid.v4();
+
+      epub.generate(message, name, function(err, res){
         s3.uploadFile(res.path, function(err, res){
           if(err != null){
             throw err;
           }
           res.name = 'epub';
+          req.io.emit('format', res);
+        });
+      });
+      pdf.generate(message, name, function(err, res){
+        s3.uploadFile(res.path, function(err, res){
+          if(err != null){
+            throw err;
+          }
+          res.name = 'pdf';
           req.io.emit('format', res);
         });
       });
